@@ -1,4 +1,4 @@
-\documentclass[lualatex]{beamer}
+\documentclass{beamer}
 
 \usepackage{fontspec}
 \setmainfont{Liberation Serif}
@@ -13,16 +13,69 @@
 
 \usepackage{graphicx}
 
-\setbeamertemplate{navigation symbols}{}
+\usepackage{hyperref}
+\hypersetup{unicode=true,pdftitle={Kotlin}}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,timeline}
+\usepackage{pgf-pie}
+\usepackage{ulem}
+\usepackage{xcolor}
+\usepackage{easylist}
 
 
 \author{Андрей Лапшин}
 \date{2015-12-25}
-\title{
-    \includegraphics{pics/logo_kotlin}\\
-    Новый язык программирования от JetBrains
+\title{Новый язык программирования от JetBrains}
+\titlegraphic{\includegraphics{pics/logo_kotlin}}
+
+% pgf-pie setup
+\newif\ifpienumberinlegend
+\pgfkeys{/number in legend/.code=
+    \expandafter\let\expandafter\ifpienumberinlegend
+    \csname if#1\endcsname
+    \ifpienumberinlegend
+    \let\legendbeforenumber\beforenumber
+    \let\legendafternumber\afternumber
+    \def\beforenumber##1\afternumber{}%
+    \fi,
+    /number in legend/.default=true
 }
 
+\makeatletter
+\definecolor{kotlin}{HTML}{4D6BAC}
+\setbeamercolor{titlelike}{fg=kotlin}
+\setbeamercolor{itemize item}{fg=kotlin}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{title page}
+{
+  \vbox{}
+  \vfill
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center]{title}
+      {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\par}
+      \vskip0.25em%
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%
+    \end{beamercolorbox}%
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center]{author}
+      \usebeamerfont{author}\insertauthor
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[sep=8pt,center]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}\vskip0.5em
+  \end{centering}
+  \vfill
+}
+\makeatother
 
 \begin{document}
 
@@ -32,6 +85,97 @@
 
 \begin{frame}
     \frametitle{Что это?}
-
+    Cтатический типизированный язык программирования для JVM, Android
+    и Javascript от JetBrains:
+    \begin{itemize}
+        \item AppCode
+        \item IntelliJ IDEA
+            \begin{itemize}
+                \item Android Studio
+            \end{itemize}
+    \end{itemize}
 \end{frame}
+
+\begin{frame}
+    \frametitle{Зачем нужен новый язык?}
+    На Android на данный момент доступна Java 6 (Java 7, если minSdkVersion=19),
+    в то время как уже выпущена Java 8 и разрабатывается Java 9 (~сентябрь 2016)
+
+    \begin{figure}
+        \begin{tikzpicture}[timespan={},scale=0.45,font=\tiny]
+            \timeline[custom interval=true]{2006,\hspace{2em},2008,\hspace{3em},2011,\hspace{2em},2013,2014,\hspace{4em}, 20xx}
+            % put here the phases
+            \begin{phases}
+                \tikzset{phase appearance/.append style={
+                        circle,
+                        opacity=0.0,
+                        minimum size=\involvdegree}
+                }
+                \phase{between week=1 and 1 in 0.0,involvement degree=0.0,phase appearance={opacity=1.0}}
+                \phase{between week=3 and 3 in 0.5,involvement degree=0.0}
+                \phase{between week=5 and 5 in 0.5,involvement degree=0.0}
+                \phase{between week=7 and 7 in 0.5,involvement degree=0.0}
+                \phase{between week=8 and 8 in 0.5,involvement degree=0.0}
+                \phase{between week=10 and 10 in 1.0,involvement degree=0.0}
+            \end{phases}
+
+            % put here the milestones
+            \addmilestone{at=phase-1.90,direction=90:1cm,circle radius=0.0,text={Java 6},text options={above}}
+            \addmilestone{at=phase-2.270,direction=270:1cm,text={Android 1.0},text options={below}}
+            \addmilestone{at=phase-3.90,direction=90:1cm,text={Java 7},text options={above}}
+            \addmilestone{at=phase-4.270,direction=270:1cm,text={Android 4.4},text options={below}}
+            \addmilestone{at=phase-5.90,direction=90:1cm,text={Java 8},text options={above}}
+            \addmilestone{at=phase-6.270,direction=270:1cm,text={Android ???},text options={below}}
+        \end{tikzpicture}
+    \end{figure}
+
+    \begin{figure}
+        \begin{tikzpicture}[scale=0.45]
+            \pie[text=legend, before number=\ (, after number=\,\%), number in legend]{
+                0.5/Marshmallow,
+                29.5/Lollipop,
+                36.6/Kitkat,
+                26.9/Jelly Bean,
+                2.9/Ice Cream Sandwich,
+                3.6/Gingerbread + Froyo
+            }
+        \end{tikzpicture}
+    \end{figure}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Зачем нужен новый язык?}
+    Недостатки Java 6
+    \begin{itemize}
+        \item \alt<-1>{Нет javax.time}{\sout{Нет javax.time} \textcolor{kotlin}{ThreeTenABP}}
+        \item \alt<-2>{Нет Streams API}{\sout{Нет Streams API} \textcolor{kotlin}{StreamSupport/RxJava}}
+        \item \alt<-3>{Нет лямбд}{\sout{Нет лямбд} \textcolor{kotlin}{Retrolambda}}
+        \item \only<-4>{Нет try-with-resources}\only<5>{\sout{Нет try-with-resources} \textcolor{kotlin}{Retrolambda/minSdkVersion=19}}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Зачем нужен новый язык?}
+    Недостатки Java в целом
+    \begin{itemize}
+        \item Добавление новой функциональности к существующим классам:
+            наследование или куча Util-классов
+        \item Проблемы при работе null
+        \item Изменяемые структуры данных по-умолчанию
+        \item Многословие
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Почему именно Kotlin}
+    \begin{itemize}
+        \item 100\% совместим с Java
+        \item Отличные инструменты разработки
+        \item Сравнительно небольшой размер рантайма (\approx 950K) и количество методов (\approx 7900)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\end{frame}
+
 \end{document}
