@@ -21,7 +21,7 @@
 \usepackage{pgf-pie}
 \usepackage{ulem}
 \usepackage{xcolor}
-\usepackage{easylist}
+\usepackage{minted}
 
 
 \author{Андрей Лапшин}
@@ -175,7 +175,81 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile,t]
+    \frametitle{Базовый синтакс}
+    \onslide<1->
+    Функции
+    \begin{minted}{kotlin}
+        fun sum(a: Int, b: Int): Int {
+            return a + b
+        }
+    \end{minted}
+
+    \onslide<2->
+    \begin{minted}{kotlin}
+        fun diff(a: Int, b: Int) = a - b
+    \end{minted}
+
+    \onslide<3->
+    Переменные
+    \begin{minted}{kotlin}
+        val a: Int = 1
+        val b = 1 // Автовыведение типа
+
+        var x = 5 // Изменяемая переменная
+        x += 1
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile,t]
+    \frametitle{Классы, свойства}
+    \begin{overprint}
+        \onslide<1>
+        \begin{minted}{kotlin}
+            class Person {
+                val name = "Vasya Pupkin"
+            }
+        \end{minted}
+
+        \onslide<2>
+        \begin{minted}{kotlin}
+            class Person constructor(name: String) {
+                val name = name
+            }
+        \end{minted}
+
+        \onslide<3>
+        \begin{minted}{kotlin}
+            class Person constructor(val name: String) {
+            }
+        \end{minted}
+
+        \onslide<4>
+        \begin{minted}{kotlin}
+            class Person(val name: String) {
+            }
+        \end{minted}
+        val person = Person("Joe Smith")
+    \end{overprint}
+\end{frame}
+
+\begin{frame}[fragile,t]
+    \frametitle{Работа с null}
+    \onslide<1->
+    \begin{minted}{kotlin}
+        var a: String = "abc"
+        a = null // ошибка компиляции
+    \end{minted}
+    \onslide<2->
+    \begin{minted}{kotlin}
+        var b: String? = "abc"
+        b = null // ok
+    \end{minted}
+    \onslide<3->
+    \begin{minted}{kotlin}
+        val l1 = a.length // ok
+        val l2 = b.length // ошибка: переменная 'b' может быть null null
+    \end{minted}
 \end{frame}
 
 \end{document}
