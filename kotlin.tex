@@ -175,7 +175,7 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}[fragile,t]
+\begin{frame}[fragile, t]
     \frametitle{Базовый синтакс}
     \onslide<1->
     Функции
@@ -201,7 +201,7 @@
     \end{minted}
 \end{frame}
 
-\begin{frame}[fragile,t]
+\begin{frame}[fragile, t]
     \frametitle{Классы, свойства}
     \begin{overprint}
         \onslide<1>
@@ -233,7 +233,7 @@
     \end{overprint}
 \end{frame}
 
-\begin{frame}[fragile,t]
+\begin{frame}[fragile, t]
     \frametitle{Работа с null}
     \onslide<1->
     \begin{minted}{kotlin}
@@ -250,6 +250,185 @@
         val l1 = a.length // ok
         val l2 = b.length // ошибка: переменная 'b' может быть null null
     \end{minted}
+\end{frame}
+
+\begin{frame}[fragile, t]
+    \frametitle{Работа с null}
+    \onslide<1->
+    \begin{minted}{kotlin}
+        val l = if (b != null) b.length else -1
+    \end{minted}
+
+    \onslide<2->
+    \begin{minted}{kotlin}
+        val l = b?.length
+        val name = bob?.department?.head?.name
+    \end{minted}
+
+    \onslide<3->
+    \begin{minted}{kotlin}
+        val l = b!!.length()
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile, t]
+    \frame{Extension functions}
+    \begin{minted}{java}
+        static boolean isVeryLong(String s) {
+            return s.length() > 80;
+        }
+
+        boolean tooLong = TextUtils.isTooLong(s);
+    \end{minted}
+    \begin{minted}{kotlin}
+        fun String.isTooLong() {
+            return length() > 80
+        }
+        val tooLong = s.isTooLong()
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile, t]
+    \frametitle{Лямбды}
+    \begin{minted}{java}
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onCLick(View v) {
+                Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show();
+            }
+        });
+    \end{minted}
+
+    \begin{minted}{java}
+        button.setOnClickListener(View v ->
+            Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show();
+        });
+    \end{minted}
+
+    \begin{minted}{kotlin}
+        button.setOnClickListener({ v: View ->
+            Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show()
+        })
+    \end{minted}
+
+    \begin{minted}{kotlin}
+        button.setOnClickListener {
+            Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show()
+        }
+    \end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile, t]
+    \frametitle{Функции высшего порядка}
+    \begin{minted}{kotlin}
+        fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+            val resultList = ArrayList<T>()
+            for (item in this) {
+                if (predicate(item)) {
+                    resultList.add(item)
+                }
+            }
+
+            return resultList
+        }
+
+        val numbers = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
+        val oddNumbers = numbers.filter { it % 2 != 0 }
+    \end{minted}
+\end{frame}
+
+\begin{frame}[fragile, t]
+    \frametitle{}
+    \begin{minted}{java}
+        db.beginTransaction();
+        try {
+            db.delete("users", "first_name = ?", new String[] { "Vasya" });
+        } finally {
+            db.endTransaction();
+        }
+    \end{minted}
+
+    \begin{minted}{java}
+        db.beginTransaction();
+        try {
+            db.delete("users", "first_name = ?", new String[] { "Vasya" });
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    \end{minted}
+
+    \begin{minted}{kotlin}
+        fun SQLiteDatabase.inTransaction(func: () -> Unit) {
+            beginTransaction()
+            try {
+                func()
+                setTransactionSuccessful()
+            } finally {
+                endTransaction()
+            }
+        }
+
+        db.inTransaction {
+            db.delete("users", "first_name = ?", arrayOf("Vasya")
+        }
+    \end{minted}
+
+    \begin{minted}{kotlin}
+        fun SQLiteDatabase.inTransaction(func: (SQLiteDatabase) -> Unit) {
+            beginTransaction()
+            try {
+                func(this)
+                setTransactionSuccessful()
+            } finally {
+                endTransaction()
+            }
+        }
+
+        db.inTransaction {
+            it.delete("users", "first_name = ?", arrayOf("Vasya")
+        }
+    \end{minted}
+
+    \begin{minted}{kotlin}
+        fun SQLiteDatabase.inTransaction(func: SQLiteDatabase.() -> Unit) {
+            beginTransaction()
+            try {
+                this.func()
+                setTransactionSuccessful()
+            } finally {
+                endTransaction()
+            }
+        }
+
+        db.inTransaction {
+            delete("users", "first_name = ?", arrayOf("Vasya")
+        }
+    \end{minted}
+
+    \begin{minted}{kotlin}
+        inline fun SQLiteDatabase.inTransaction(func: SQLiteDatabase.() -> Unit) {
+            beginTransaction()
+            try {
+                this.func()
+                setTransactionSuccessful()
+            } finally {
+                endTransaction()
+            }
+        }
+
+        db.inTransaction {
+            delete("users", "first_name = ?", arrayOf("Vasya")
+        }
+    \end{minted}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Документация и полезные ресурсы}
+    Сайт и документация: \url{https://kotlinlang.org/}
+    Онлайн IDE: \url{http://try.kotlinlang.org}
+    \href{http://www.youtube.com/watch?v=A2LukgT2mKc}{Android Development with Kotlin}
+    \href{https://docs.google.com/document/d/1ReS3ep-hjxWA8kZi0YqDbEhCqTt29hG8P44aA9W0DM8/edit?hl=en&forcehl=1}{Using Project Kotlin for Android}
 \end{frame}
 
 \end{document}
