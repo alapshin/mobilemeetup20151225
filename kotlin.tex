@@ -7,6 +7,9 @@
 \newfontfamily{\cyrillicfont}{Liberation Serif}
 \newfontfamily{\cyrillicfonttt}{Liberation Mono}
 
+\usepackage{unicode-math}
+\setmathfont{STIX Math}
+
 \usepackage{polyglossia}
 \setmainlanguage{russian}
 \setotherlanguage{english}
@@ -14,7 +17,7 @@
 \usepackage{graphicx}
 
 \usepackage{hyperref}
-\hypersetup{unicode=true,pdftitle={Kotlin}}
+\hypersetup{unicode=true, colorlinks=true}
 
 \usepackage{tikz}
 \usetikzlibrary{positioning,timeline}
@@ -179,20 +182,20 @@
     \frametitle{Базовый синтакс}
     \onslide<1->
     Функции
-    \begin{minted}{kotlin}
+    \begin{minted}[gobble=8]{kotlin}
         fun sum(a: Int, b: Int): Int {
             return a + b
         }
     \end{minted}
 
     \onslide<2->
-    \begin{minted}{kotlin}
+    \begin{minted}[gobble=8]{kotlin}
         fun diff(a: Int, b: Int) = a - b
     \end{minted}
 
     \onslide<3->
     Переменные
-    \begin{minted}{kotlin}
+    \begin{minted}[gobble=8]{kotlin}
         val a: Int = 1
         val b = 1 // Автовыведение типа
 
@@ -205,82 +208,87 @@
     \frametitle{Классы, свойства}
     \begin{overprint}
         \onslide<1>
-        \begin{minted}{kotlin}
+        \begin{minted}[gobble=12]{kotlin}
             class Person {
                 val name = "Vasya Pupkin"
             }
         \end{minted}
 
         \onslide<2>
-        \begin{minted}{kotlin}
+        \begin{minted}[gobble=12]{kotlin}
             class Person constructor(name: String) {
                 val name = name
             }
         \end{minted}
 
         \onslide<3>
-        \begin{minted}{kotlin}
+        \begin{minted}[gobble=12]{kotlin}
             class Person constructor(val name: String) {
             }
         \end{minted}
 
         \onslide<4>
-        \begin{minted}{kotlin}
+        \begin{minted}[gobble=12]{kotlin}
             class Person(val name: String) {
             }
+            val person = Person("Joe Smith")
         \end{minted}
-        val person = Person("Joe Smith")
     \end{overprint}
 \end{frame}
 
 \begin{frame}[fragile, t]
     \frametitle{Работа с null}
     \onslide<1->
-    \begin{minted}{kotlin}
+    \begin{minted}[gobble=8]{kotlin}
         var a: String = "abc"
         a = null // ошибка компиляции
     \end{minted}
     \onslide<2->
-    \begin{minted}{kotlin}
+    \begin{minted}[gobble=8]{kotlin}
         var b: String? = "abc"
         b = null // ok
     \end{minted}
     \onslide<3->
-    \begin{minted}{kotlin}
+    \begin{minted}[gobble=8]{kotlin}
         val l1 = a.length // ok
-        val l2 = b.length // ошибка: переменная 'b' может быть null null
+        val l2 = b.length // ошибка: 'b' может быть null
     \end{minted}
 \end{frame}
 
 \begin{frame}[fragile, t]
     \frametitle{Работа с null}
     \onslide<1->
-    \begin{minted}{kotlin}
+    Явная проверка на null
+    \begin{minted}[gobble=8]{kotlin}
         val l = if (b != null) b.length else -1
     \end{minted}
 
     \onslide<2->
-    \begin{minted}{kotlin}
+    Использование оператора ?
+    \begin{minted}[gobble=8]{kotlin}
         val l = b?.length
         val name = bob?.department?.head?.name
     \end{minted}
 
     \onslide<3->
-    \begin{minted}{kotlin}
+    Использование оператора !!
+    \begin{minted}[gobble=8]{kotlin}
         val l = b!!.length()
     \end{minted}
 \end{frame}
 
 \begin{frame}[fragile, t]
-    \frame{Extension functions}
-    \begin{minted}{java}
+    \frametitle{Extension functions}
+    \onslide<1->
+    \begin{minted}[gobble=8]{java}
         static boolean isVeryLong(String s) {
             return s.length() > 80;
         }
-
         boolean tooLong = TextUtils.isTooLong(s);
     \end{minted}
-    \begin{minted}{kotlin}
+
+    \onslide<2->
+    \begin{minted}[gobble=8]{kotlin}
         fun String.isTooLong() {
             return length() > 80
         }
@@ -290,29 +298,37 @@
 
 \begin{frame}[fragile, t]
     \frametitle{Лямбды}
-    \begin{minted}{java}
+    \onslide<1->
+    \begin{minted}[gobble=8, fontsize=\small]{java}
         button.setOnClickListener(new View.OnClickListener() {
             public void onCLick(View v) {
-                Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MyActivity.this, "Some text",
+                Toast.LENGTH_SHORT).show();
             }
         });
     \end{minted}
 
-    \begin{minted}{java}
+    \onslide<2->
+    \begin{minted}[gobble=8, fontsize=\small]{java}
         button.setOnClickListener(View v ->
-            Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MyActivity.this, "Some text",
+            Toast.LENGTH_SHORT).show();
         });
     \end{minted}
 
-    \begin{minted}{kotlin}
+    \onslide<3->
+    \begin{minted}[gobble=8, fontsize=\small]{kotlin}
         button.setOnClickListener({ v: View ->
-            Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show()
+            Toast.makeText(MyActivity.this, "Some text",
+            Toast.LENGTH_SHORT).show()
         })
     \end{minted}
 
-    \begin{minted}{kotlin}
+    \onslide<4->
+    \begin{minted}[gobble=8, fontsize=\small]{kotlin}
         button.setOnClickListener {
-            Toast.makeText(MyActivity.this, "Some text", Toast.LENGTH_SHORT).show()
+            Toast.makeText(MyActivity.this, "Some text",
+            Toast.LENGTH_SHORT).show()
         }
     \end{minted}
 \end{frame}
@@ -320,115 +336,156 @@
 
 \begin{frame}[fragile, t]
     \frametitle{Функции высшего порядка}
-    \begin{minted}{kotlin}
-        fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
-            val resultList = ArrayList<T>()
-            for (item in this) {
-                if (predicate(item)) {
-                    resultList.add(item)
+    \begin{overprint}
+        \onslide<1>
+        \begin{minted}[gobble=12]{kotlin}
+            fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+                // ...
+            }
+        \end{minted}
+
+        \onslide<2>
+        \begin{minted}[gobble=12]{kotlin}
+            fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+                val resultList = ArrayList<T>()
+                for (item in this) {
+                    if (predicate(item)) {
+                        resultList.add(item)
+                    }
                 }
+
+                return resultList
+            }
+        \end{minted}
+
+        \onslide<3>
+        \begin{minted}[gobble=12]{kotlin}
+            fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+                val resultList = ArrayList<T>()
+                for (item in this) {
+                    if (predicate(item)) {
+                        resultList.add(item)
+                    }
+                }
+
+                return resultList
             }
 
-            return resultList
-        }
-
-        val numbers = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
-        val oddNumbers = numbers.filter { it % 2 != 0 }
-    \end{minted}
+            val numbers = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 0)
+            val oddNumbers = numbers.filter { it % 2 != 0 }
+        \end{minted}
+    \end{overprint}
 \end{frame}
 
 \begin{frame}[fragile, t]
-    \frametitle{}
-    \begin{minted}{java}
-        db.beginTransaction();
-        try {
-            db.delete("users", "first_name = ?", new String[] { "Vasya" });
-        } finally {
-            db.endTransaction();
-        }
-    \end{minted}
-
-    \begin{minted}{java}
-        db.beginTransaction();
-        try {
-            db.delete("users", "first_name = ?", new String[] { "Vasya" });
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-    \end{minted}
-
-    \begin{minted}{kotlin}
-        fun SQLiteDatabase.inTransaction(func: () -> Unit) {
-            beginTransaction()
+    \frametitle{Функции высшего порядка}
+    \begin{overprint}
+        \onslide<1>
+        \begin{minted}[gobble=12, fontsize=\small]{java}
+            db.beginTransaction();
             try {
-                func()
-                setTransactionSuccessful()
+                db.delete("users", "first_name = ?", new String[] { "Vasya" });
             } finally {
-                endTransaction()
+                db.endTransaction();
             }
-        }
+        \end{minted}
 
-        db.inTransaction {
-            db.delete("users", "first_name = ?", arrayOf("Vasya")
-        }
-    \end{minted}
-
-    \begin{minted}{kotlin}
-        fun SQLiteDatabase.inTransaction(func: (SQLiteDatabase) -> Unit) {
-            beginTransaction()
+        \onslide<2>
+        \begin{minted}[gobble=12, fontsize=\small]{java}
+            db.beginTransaction();
             try {
-                func(this)
-                setTransactionSuccessful()
+                db.delete("users", "first_name = ?", new String[] { "Vasya" });
+                db.setTransactionSuccessful();
             } finally {
-                endTransaction()
+                db.endTransaction();
             }
-        }
+        \end{minted}
 
-        db.inTransaction {
-            it.delete("users", "first_name = ?", arrayOf("Vasya")
-        }
-    \end{minted}
-
-    \begin{minted}{kotlin}
-        fun SQLiteDatabase.inTransaction(func: SQLiteDatabase.() -> Unit) {
-            beginTransaction()
-            try {
-                this.func()
-                setTransactionSuccessful()
-            } finally {
-                endTransaction()
+        \onslide<3>
+        \begin{minted}[gobble=12, fontsize=\small]{kotlin}
+            fun SQLiteDatabase.inTransaction(func: () -> Unit) {
+                beginTransaction()
+                try {
+                    func()
+                    setTransactionSuccessful()
+                } finally {
+                    endTransaction()
+                }
             }
-        }
 
-        db.inTransaction {
-            delete("users", "first_name = ?", arrayOf("Vasya")
-        }
-    \end{minted}
-
-    \begin{minted}{kotlin}
-        inline fun SQLiteDatabase.inTransaction(func: SQLiteDatabase.() -> Unit) {
-            beginTransaction()
-            try {
-                this.func()
-                setTransactionSuccessful()
-            } finally {
-                endTransaction()
+            db.inTransaction {
+                db.delete("users", "first_name = ?", arrayOf("Vasya")
             }
-        }
+        \end{minted}
 
-        db.inTransaction {
-            delete("users", "first_name = ?", arrayOf("Vasya")
-        }
-    \end{minted}
+        \onslide<4>
+        \begin{minted}[gobble=12, fontsize=\small]{kotlin}
+            fun SQLiteDatabase.inTransaction(
+                        func: (SQLiteDatabase) -> Unit) {
+                beginTransaction()
+                try {
+                    func(this)
+                    setTransactionSuccessful()
+                } finally {
+                    endTransaction()
+                }
+            }
+
+            db.inTransaction {
+                it.delete("users", "first_name = ?", arrayOf("Vasya")
+            }
+        \end{minted}
+
+        \onslide<5>
+        \begin{minted}[gobble=12, fontsize=\small]{kotlin}
+            fun SQLiteDatabase.inTransaction(
+                    func: SQLiteDatabase.() -> Unit) {
+                beginTransaction()
+                try {
+                    this.func()
+                    setTransactionSuccessful()
+                } finally {
+                    endTransaction()
+                }
+            }
+
+            db.inTransaction {
+                delete("users", "first_name = ?", arrayOf("Vasya")
+            }
+        \end{minted}
+
+        \onslide<6>
+        \begin{minted}[gobble=12, fontsize=\small]{kotlin}
+            inline fun SQLiteDatabase.inTransaction(
+                    func: SQLiteDatabase.() -> Unit) {
+                beginTransaction()
+                try {
+                    this.func()
+                    setTransactionSuccessful()
+                } finally {
+                    endTransaction()
+                }
+            }
+
+            db.inTransaction {
+                delete("users", "first_name = ?", arrayOf("Vasya")
+            }
+        \end{minted}
+    \end{overprint}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Документация и полезные ресурсы}
-    Сайт и документация: \url{https://kotlinlang.org/}
-    Онлайн IDE: \url{http://try.kotlinlang.org}
-    \href{http://www.youtube.com/watch?v=A2LukgT2mKc}{Android Development with Kotlin}
-    \href{https://docs.google.com/document/d/1ReS3ep-hjxWA8kZi0YqDbEhCqTt29hG8P44aA9W0DM8/edit?hl=en&forcehl=1}{Using Project Kotlin for Android}
+    \frametitle{Документация и полезные ссылки}
+    \begin{description}
+        \item Сайт и документация: \\
+            \url{https://kotlinlang.org}
+        \item Онлайн IDE: \\
+            \url{http://try.kotlinlang.org}
+        \item Презентация Джейка Уортона (Jake Wharton) о языке (англ.): \\
+            \href{http://www.youtube.com/watch?v=A2LukgT2mKc}{Android Development with Kotlin}
+        \item Мотивации для использования и сравнение с другими языками под JVM (англ.): \\
+            \href{https://docs.google.com/document/d/1ReS3ep-hjxWA8kZi0YqDbEhCqTt29hG8P44aA9W0DM8/edit?hl=en&forcehl=1}{Using Project Kotlin for Android}
+    \end{description}
 \end{frame}
 
 \end{document}
