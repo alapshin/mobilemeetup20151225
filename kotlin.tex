@@ -1,54 +1,12 @@
 \documentclass{beamer}
 
-\usepackage{fontspec}
-\setmainfont{Liberation Serif}
-\setsansfont{Liberation Sans}
-\setmonofont{Liberation Mono}
-\newfontfamily{\cyrillicfont}{Liberation Serif}
-\newfontfamily{\cyrillicfonttt}{Liberation Mono}
-
-\usepackage{unicode-math}
-\setmathfont{STIX Math}
-
-\usepackage{polyglossia}
-\setmainlanguage{russian}
-\setotherlanguage{english}
-
-\usepackage{graphicx}
-
-\usepackage{hyperref}
-\hypersetup{unicode=true, colorlinks=true}
-
-\usepackage{tikz}
-\usetikzlibrary{positioning,timeline}
-\usepackage{pgf-pie}
-\usepackage{ulem}
-\usepackage{xcolor}
-\usepackage{minted}
-
-
-\author{Андрей Лапшин}
-\date{2015-12-25}
-\title{Новый язык программирования от JetBrains}
-\titlegraphic{\includegraphics{pics/logo_kotlin}}
-
-% pgf-pie setup
-\newif\ifpienumberinlegend
-\pgfkeys{/number in legend/.code=
-    \expandafter\let\expandafter\ifpienumberinlegend
-    \csname if#1\endcsname
-    \ifpienumberinlegend
-    \let\legendbeforenumber\beforenumber
-    \let\legendafternumber\afternumber
-    \def\beforenumber##1\afternumber{}%
-    \fi,
-    /number in legend/.default=true
-}
-
+\setbeameroption{show notes}
 \makeatletter
 \definecolor{kotlin}{HTML}{4D6BAC}
 \setbeamercolor{titlelike}{fg=kotlin}
 \setbeamercolor{itemize item}{fg=kotlin}
+\setbeamercolor{note page}{bg=white}
+\setbeamercolor{note title}{bg=white}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{title page}
 {
@@ -80,10 +38,59 @@
 }
 \makeatother
 
+\usepackage{fontspec}
+\setmainfont{Liberation Serif}
+\setsansfont{Liberation Sans}
+\setmonofont{Liberation Mono}
+\newfontfamily{\cyrillicfont}{Liberation Serif}
+\newfontfamily{\cyrillicfonttt}{Liberation Mono}
+
+% \usepackage{unicode-math}
+% \setmathfont{STIX Math}
+
+\usepackage{polyglossia}
+\setmainlanguage{russian}
+\setotherlanguage{english}
+
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+\hypersetup{unicode=true, colorlinks=true}
+
+\usepackage{tikz}
+\usetikzlibrary{positioning,timeline}
+\usepackage{pgf-pie}
+% pgf-pie setup
+\newif\ifpienumberinlegend
+\pgfkeys{/number in legend/.code=
+    \expandafter\let\expandafter\ifpienumberinlegend
+    \csname if#1\endcsname
+    \ifpienumberinlegend
+    \let\legendbeforenumber\beforenumber
+    \let\legendafternumber\afternumber
+    \def\beforenumber##1\afternumber{}%
+    \fi,
+    /number in legend/.default=true
+}
+
+\usepackage{ulem}
+\usepackage{xcolor}
+\usepackage{minted}
+
+
+\author{Андрей Лапшин}
+\institute{KSI}
+\date{2015-12-25}
+\title{Новый язык программирования от JetBrains}
+\titlegraphic{\includegraphics{pics/logo_kotlin}}
+
 \begin{document}
 
 \begin{frame}
     \titlepage
+    \note{Привет. Меня зовут Андрей Лапшин, я работаю C++/Android программистом
+        в компании KSI и сегодня я вам попытаюсь рассказать про новый язык
+        програмирования Kotlin.}
 \end{frame}
 
 \begin{frame}
@@ -97,6 +104,14 @@
                 \item Android Studio
             \end{itemize}
     \end{itemize}
+    \note{Kotlin это статически типизированный язык программирования для JVM,
+        Android и браузера от компании JetBrains. Компания JetBrains большинству
+        из вас известна как разработчик ряда IDE таких как InteliiJ IDEA, AppCode,
+        PhpStorm и т. п. Android Studio построена на базе открытой версии
+        InteliiJ IDEA. Кроме IDE компания также выпускает ряд серверных
+        приложений типа YouTrack, TeamCity. Большая часть продуктов JetBrains
+        написана на Java, но в 2010 году существующих на тот момент фич Java
+        видимо стало не хватать, поэтому они решили начать разрабатывать новый язык.}
 \end{frame}
 
 \begin{frame}
@@ -144,6 +159,13 @@
             }
         \end{tikzpicture}
     \end{figure}
+    \note{У любого здравомыслящего человека после того как, он слышит о новом
+        языке программирования сразу возникает вопрос: "Зачем и что в 2015 году
+        не устраивает в Java?" Однако при разработке под Android мы по-прежнему
+        вынуждены работать с Java как в 2010 году. В то время как на десктопе и
+        сервере разработчикам доступна Java 8, на Android мы можем использовать
+        в лучшем случае Java 7, при условии что мы забудем про ~25\% пользователей
+        на Jelly Bean.}
 \end{frame}
 
 \begin{frame}
@@ -155,17 +177,51 @@
         \item \alt<-3>{Нет лямбд}{\sout{Нет лямбд} \textcolor{kotlin}{Retrolambda}}
         \item \only<-4>{Нет try-with-resources}\only<5>{\sout{Нет try-with-resources} \textcolor{kotlin}{Retrolambda/minSdkVersion=19}}
     \end{itemize}
+    \note{В результате на Android недоступны например, следуюшие API. На самом
+        вопрос нехватки каких-то библиотек решаем. Например, вместо javax.time
+        можно использовать бэкпорт этой библиотеки. Для Streams API также доступен
+        бэкпорт, либо можно использовать библиотеку RxJava которая по целям
+        совпадает со Stream API но умеет многое другое. Даже некоторые
+        новые фичи языка становятся доступными, если использовать дополнительные
+        инструменты.}
 \end{frame}
 
 \begin{frame}
     \frametitle{Зачем нужен новый язык?}
     Недостатки Java в целом
+    \note<1>{
+        Однако даже с учетом этого у Java как языка в целом есть
+        недостатки, которые в сочетании с недостатками Android как платформы
+        затрудняют разработку.
+    }
     \begin{itemize}
-        \item Добавление новой функциональности к существующим классам:
-            наследование или куча Util-классов
-        \item Проблемы при работе null
-        \item Изменяемые структуры данных по-умолчанию
-        \item Многословие
+        \item<1-> Необходимость наследования от системных классов
+            \note<1>{
+                Первая проблема особенно заметна на Android, достаточно взглянуть на
+                иерархию Activity-классов (Activity -> FragmentedActivity -> AppCompatActivity)
+            }
+        \item<2-> Невозможность расширения функциональности существующих классов
+            (накапливается множество мелких Util-классов)
+            \note<2>{
+                Вторая проблема актуальна не только для Android. Например, вам нужно добавить какой-то
+                вспомогательный метод для класса (валидация) но к классу вы его добавить не можете, так
+                как класс лежит в какой-то библиотеке. Нужно либо наследоваться от класса,
+                либо создать Util-класс в котором определен статический метод с нужным функционалом.
+                Упомянуть TextUtil. В результате накапливается множество мелких вспомогательных классов.
+            }
+        \item<3-> Проблемы при работе c null
+            \note<3>{
+                Третья проблема это наличие языке null (так называемая "ошибка на миллиард долларов").
+                Если у вас есть какой-то метод возращаюший объект, вы заранее не знаете, вернет ли он
+                объект или null. Нужно либо смотреть документацию, либо явно проверять возвращаемое значение.
+                В Android с этим особенно сложно, так как для оптимизации производительности,
+                куча системных методов может принимать и возвращать null.
+            }
+        \item<4-> Многословие
+            \note<4>{
+                Последний недостаток Java - это многословие. Порой для простейших вещей
+                нужно написать десяток строк
+            }
     \end{itemize}
 \end{frame}
 
@@ -176,6 +232,11 @@
         \item Отличные инструменты разработки
         \item Сравнительно небольшой размер рантайма (\approx 950K) и количество методов (\approx 7900)
     \end{itemize}
+    \note{
+        Предположим, что вы поработали с джавой пару лет и вам хочется чего-то
+        более современного. Почему именно Kotlin, а например не Scala или Groovy
+        или любой из других JVM-языков?
+    }
 \end{frame}
 
 \begin{frame}[fragile, t]
@@ -202,6 +263,17 @@
         var x = 5 // Изменяемая переменная
         x += 1
     \end{minted}
+    \note{Обсудили зачем новый язык, теперь давайте посмотрим на синтаксиса
+        примеры кода
+        \\
+        Функции в Kotlin объвляются с помощью ключевого слова fun, порядок имени
+        аргументов и их типов отличается Java и напоминает Pascal, сначала имя
+        аргумента, затем тип. В отличии от Java Kotiln допускает функции вне классов
+        Указать на возможность пропуска точки с запятой
+        \\
+        Переменные в Kotlin могут быть объявлены с помощью ключевых слов val и
+        var. val - неизменяемая переменная, var - изменяемая. И поддерживают выведение типа
+    }
 \end{frame}
 
 \begin{frame}[fragile, t]
@@ -234,6 +306,13 @@
             val person = Person("Joe Smith")
         \end{minted}
     \end{overprint}
+    \note{
+        Классы в Kotlin объявляются с помощью ключевого слова class.
+        Классы могут иметь свойства, которые объявляются с помощью val или var.
+        val - неизменяемое свойство, var - изменяемое. Для свойств автоматически
+        генерируются геттеры и сеттеры. Классы могут иметь конструкторы,
+        аргументы конструктора могут использоваться при инициалиации свойств класса
+    }
 \end{frame}
 
 \begin{frame}[fragile, t]
@@ -253,18 +332,37 @@
         val l1 = a.length // ok
         val l2 = b.length // ошибка: 'b' может быть null
     \end{minted}
+    \note{
+        В Kotlin тип переменных, которые могут содержать null, отличается от
+        типа переменных которые не могут. При обращении к свойствам или методам
+        объекта, который может быть null компилятор также выдает ошибку
+    }
 \end{frame}
 
 \begin{frame}[fragile, t]
     \frametitle{Работа с null}
+    \note{
+        Есть три способа получения значения, которое лежит в переменной
+        способной хранить null.
+    }
     \onslide<1->
     Явная проверка на null
+    \note{
+        Первый вариант проверка на null в условии. Компилятор учитывает эту
+        проверку и позволяет обращаться с к свойствам и методам соответствующего
+        объекта в соответсвующей ветке
+    }
     \begin{minted}[gobble=8]{kotlin}
         val l = if (b != null) b.length else -1
     \end{minted}
 
     \onslide<2->
     Использование оператора ?
+    \note{
+        Второй вариант - использование оператора ?, в том случае если в переменной
+        лежит null обращение к свойствам объекта также вернет null, если в переменной
+        лежит значение то отработает как обычно
+    }
     \begin{minted}[gobble=8]{kotlin}
         val l = b?.length
         val name = bob?.department?.head?.name
@@ -272,6 +370,10 @@
 
     \onslide<3->
     Использование оператора !!
+    \note{
+        Третий вариант - использование оператора !! В этом случае при обращении
+        к свойствам переменной в которой лежит null будет брошено NPE.
+    }
     \begin{minted}[gobble=8]{kotlin}
         val l = b!!.length()
     \end{minted}
@@ -294,6 +396,11 @@
         }
         val tooLong = s.isTooLong()
     \end{minted}
+    \note{
+        В Java это достигается за счет создания вспомогательного класса со
+        статическим методом. В Kotlin мы можем объявить функцию-расширение на
+        нужном типе и к ней можно будет обращаться как к методу класса.
+    }
 \end{frame}
 
 \begin{frame}[fragile, t]
@@ -310,7 +417,7 @@
 
     \onslide<2->
     \begin{minted}[gobble=8, fontsize=\small]{java}
-        button.setOnClickListener(View v ->
+        button.setOnClickListener(v ->
             Toast.makeText(MyActivity.this, "Some text",
             Toast.LENGTH_SHORT).show();
         });
@@ -331,22 +438,33 @@
             Toast.LENGTH_SHORT).show()
         }
     \end{minted}
+    \note{
+        Лямбды отлично помогают в написании более краткого кода и особенно
+        полезны на Android где множество методов принимают в качестве параметра
+        колбэки. Kotlin лямбды поддерживает из коробки.
+    }
 \end{frame}
 
 
 \begin{frame}[fragile, t]
     \frametitle{Функции высшего порядка}
+    \note{
+        Функции высшего порядка - это функции которые принимают в качестве
+        аргументов или возвращают другие функции. Рассмотрим пример определения
+        функии высшего порядка, которая позволит фильтровать список по заданному
+        критерию.
+    }
     \begin{overprint}
         \onslide<1>
         \begin{minted}[gobble=12]{kotlin}
-            fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+            fun<T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
                 // ...
             }
         \end{minted}
 
         \onslide<2>
         \begin{minted}[gobble=12]{kotlin}
-            fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+            fun<T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
                 val resultList = ArrayList<T>()
                 for (item in this) {
                     if (predicate(item)) {
@@ -360,7 +478,7 @@
 
         \onslide<3>
         \begin{minted}[gobble=12]{kotlin}
-            fun <T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
+            fun<T> List<T>.filter(predicate: (T) -> Boolean): List<T> {
                 val resultList = ArrayList<T>()
                 for (item in this) {
                     if (predicate(item)) {
@@ -379,8 +497,16 @@
 
 \begin{frame}[fragile, t]
     \frametitle{Функции высшего порядка}
+    \note<1>{
+        Напоследок пример кода, который объединяет в себе лямбды,
+        функции-расширения и функции высшего порядка.
+    }
     \begin{overprint}
         \onslide<1>
+        \note<1>{
+            Предположим нам нужно удалить запись из БД, для этого напишем
+            такой код
+        }
         \begin{minted}[gobble=12, fontsize=\small]{java}
             db.beginTransaction();
             try {
@@ -391,6 +517,10 @@
         \end{minted}
 
         \onslide<2>
+        \note<2>{
+            В этом коде ошибка, забыли указать БД на успешное завершение
+            транзакции
+        }
         \begin{minted}[gobble=12, fontsize=\small]{java}
             db.beginTransaction();
             try {
@@ -402,6 +532,11 @@
         \end{minted}
 
         \onslide<3>
+        \note<3>{
+            Посмотрим как можно упростить этот код, используя Kotlin.
+            Определим функцию-расширение inTransaction на классе SQLiteDatabase,
+            которая в качестве аргумента принимают функцию без аргументов и возвращаемого значения
+        }
         \begin{minted}[gobble=12, fontsize=\small]{kotlin}
             fun SQLiteDatabase.inTransaction(func: () -> Unit) {
                 beginTransaction()
@@ -419,6 +554,12 @@
         \end{minted}
 
         \onslide<4>
+        \note<4>{
+            Повторное указание db внутри inTransaction кажется избыточным.
+            Может от него можно избавиться? Переопределим немного
+            функцию-расширение. Теперь она в качестве аргумента принимают функцию,
+            которая в свою очередь принимает SQLiteDatabase и возвращает Unit
+        }
         \begin{minted}[gobble=12, fontsize=\small]{kotlin}
             fun SQLiteDatabase.inTransaction(
                         func: (SQLiteDatabase) -> Unit) {
@@ -437,6 +578,10 @@
         \end{minted}
 
         \onslide<5>
+        \note<5>{
+            Упростим ещё немного. Теперь функция inTransaction принимает
+            в качестве аргумента другую функцию-раширение на классе SQLiteDatabase
+        }
         \begin{minted}[gobble=12, fontsize=\small]{kotlin}
             fun SQLiteDatabase.inTransaction(
                     func: SQLiteDatabase.() -> Unit) {
@@ -455,6 +600,10 @@
         \end{minted}
 
         \onslide<6>
+        \note<6>{
+            Для повышения производительности объявим эту функцию inline, чтобы
+            kotlin не генерировал для каждого вызова отдельный класс
+        }
         \begin{minted}[gobble=12, fontsize=\small]{kotlin}
             inline fun SQLiteDatabase.inTransaction(
                     func: SQLiteDatabase.() -> Unit) {
@@ -472,6 +621,7 @@
             }
         \end{minted}
     \end{overprint}
+
 \end{frame}
 
 \begin{frame}
